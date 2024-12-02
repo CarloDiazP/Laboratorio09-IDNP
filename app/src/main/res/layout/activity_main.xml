@@ -59,9 +59,9 @@
                 android:id="@+id/btnPause"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/pause_icon"
+                android:src="@drawable/restart_icon"
                 android:background="@drawable/pause_stop_button"
-                android:contentDescription="Pause"
+                android:contentDescription="Restart"
                 android:padding="8dp"
                 android:layout_margin="8dp" />
             <ImageButton
