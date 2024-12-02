@@ -3,6 +3,7 @@
     <style name="Base.Theme.ReproductorService" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorButtonNormal">#00FF00</item>
     </style>
 
     <style name="Theme.ReproductorService" parent="Base.Theme.ReproductorService" />
