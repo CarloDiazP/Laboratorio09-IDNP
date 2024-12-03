@@ -17,6 +17,7 @@ class MusicService : Service() {
             "STOP" -> stopMusic()
             "RESUME" -> resumeMusic()
             "PAUSE" -> pauseMusic()
+            "RESTART" -> restartMusic()
         }
         return START_STICKY
     }
@@ -28,6 +29,15 @@ class MusicService : Service() {
             mediaPlayer?.start()
             Log.d(TAG, "Reproducción iniciada")
         }
+    }
+
+    private fun restartMusic() {
+        mediaPlayer?.stop()
+        mediaPlayer?.reset()
+        mediaPlayer = MediaPlayer.create(this, R.raw.himno_aqp)
+        mediaPlayer?.isLooping = true
+        mediaPlayer?.start()
+        Log.d(TAG, "Reproducción reiniciada")
     }
 
     private fun stopMusic() {
@@ -62,4 +72,5 @@ class MusicService : Service() {
         stopMusic()
         super.onDestroy()
     }
+
 }
