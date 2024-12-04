@@ -4,12 +4,24 @@ import android.content.Intent
 import android.media.MediaPlayer
 import android.os.IBinder
 import android.util.Log
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.os.Build
+import androidx.core.app.NotificationCompat
 
 class MusicService : Service() {
 
     private var mediaPlayer: MediaPlayer? = null
     private val TAG = "MusicService"
     private var isPaused = false
+    private val CHANNEL_ID = "MusicChannel"
+
+    override fun onCreate() {
+        super.onCreate()
+        createNotificationChannel()
+    }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
@@ -18,6 +30,8 @@ class MusicService : Service() {
             "RESUME" -> resumeMusic()
             "PAUSE" -> pauseMusic()
             "RESTART" -> restartMusic()
+            "SHOW_NOTIFICATION" -> showNotification()
+            "HIDE_NOTIFICATION" -> stopForeground(STOP_FOREGROUND_REMOVE)
         }
         return START_STICKY
     }
@@ -60,6 +74,40 @@ class MusicService : Service() {
             mediaPlayer?.start()
             isPaused = false
             Log.d(TAG, "Reproducción reanudada")
+        }
+    }
+
+    private fun showNotification() {
+        val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle("Reproduciendo música")
+            .setContentText("La música está en reproducción")
+            .setSmallIcon(R.drawable.arequipa_bandera)
+            .setAutoCancel(false)
+            .setOngoing(true)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setCategory(NotificationCompat.CATEGORY_SERVICE)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .build()
+
+        startForeground(1, notification)
+        Log.d(TAG, "Show Notification")
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            val channel = NotificationChannel(
+                CHANNEL_ID,
+                "Music Service Channel",
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            channel.setSound(null, null)
+            channel.enableVibration(false)
+
+            val manager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.createNotificationChannel(channel)
+            Log.d(TAG, "Created channel")
         }
     }
 
